@@ -1,0 +1,103 @@
+<html>
+
+<style>
+#sky {
+	background:#ddf7ff;
+	
+	width:100px;
+}
+
+#ground {
+	background:green;
+	border:1px solid black;
+	height:100px;
+	width:100px;
+}
+</style>
+
+
+Throttle Position (0-5):<span id="throttle">0</span><br>
+Speed:<span id="speed"></span> mph<br>
+Altitude:<span id="altitude"></span><br>
+<div id="ground" style="">
+<div id="sky" style="height:50px;"/>
+</div>
+
+<script>
+
+// Aircraft properties
+var drag = 3;
+var maxSpeed = 100;
+var minSpeed = 35;
+
+// Dynamic state
+var speed = 80;
+var altitude = 300;
+var attitude = 0;
+var throttlePosition = 3;/* Throttle position from 0-5 */
+
+document.onkeydown = function(keyboardEvent){
+	if(keyboardEvent.key === "ArrowDown"){
+		attitude = attitude + 2;
+	}
+	if(keyboardEvent.key === "ArrowUp"){
+		attitude = attitude - 2;
+	}
+	if(keyboardEvent.key === "w"){
+		throttlePosition = throttlePosition + 1;
+	}
+	if(keyboardEvent.key === "s"){
+		throttlePosition = throttlePosition - 1;
+	}
+	redraw();
+}
+
+function setTextForId(id, text){
+	var theSpan = document.querySelector("#" + id);
+	theSpan.textContent = text;
+}
+
+function redraw(){
+	setTextForId("speed", speed);
+	setTextForId("altitude", altitude);
+	setTextForId("throttle", throttlePosition);
+	
+	var skyBox = document.querySelector("#sky");
+	skyBox.setAttribute("style", "height:" + (50 + attitude) + "px");
+}
+
+
+function handleSpeed(){
+	
+	if(attitude < 0){
+		altitude = altitude - 1;
+	}
+	if(attitude > 0){
+		altitude = altitude + 1;
+	}
+	
+	if(altitude<1){
+		alert("You crashed into the ground at " + speed + " mph!");
+	}
+	
+	if(speed > maxSpeed){
+		alert("You ripped your wings off!");
+	} else if(speed < minSpeed){
+		alert("You're falling to your death!");
+	}else{
+		
+		var newSpeed = speed - ((speed * drag)/20) + throttlePosition - (attitude/10);
+		
+		speed = newSpeed;
+		
+		redraw();
+		setTimeout(handleSpeed, 1000);
+	}
+}
+
+redraw();
+
+setTimeout(handleSpeed, 1000);
+
+</script>
+</html>
