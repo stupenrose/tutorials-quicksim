@@ -66,7 +66,7 @@ function redraw(){
 }
 
 
-function handleSpeed(){
+function simulate(){
 	if(altitude<1){
 		alert("You crashed into the ground at " + speed + " mph!");
 	}else if(speed > maxSpeed){
@@ -85,13 +85,11 @@ function handleSpeed(){
 		}
 		
 		redraw();
-		setTimeout(handleSpeed, 1000);
+		setTimeout(simulate, 1000);
 	}
 }
 
-redraw();
-
-setTimeout(handleSpeed, 1000);
+simulate();
 
 </script>
 </html>
